@@ -204,3 +204,9 @@
   201  git branch -m main
   202  git branch
   203  git push -u origin main
+
+
+to change the default branch in git hub
+
+click on branchname--->select view all branches--->under -->selsct the srrow sybols--->select default branch -->
+select pen sybol to remae the branch -->select the arrow symbols to change the default branch.                                                         <--
