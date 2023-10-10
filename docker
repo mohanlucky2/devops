@@ -548,5 +548,141 @@ docker swarm join-token manage
    41  docker node ls
    42  docker images
 
+docker networks:
+----------------
+Docker networking is a fundamental aspect of working with Docker containers. 
+It allows containers to communicate with each other and with the outside world. 
+There are several networking options available in Docker, and understanding 
+them is crucial for effectively deploying and managing containerized applications.
 
+Here are some key concepts and options related to Docker networking:
+
+Bridge Network: This is the default network that Docker sets up when you install it.
+ Containers connected to a bridge network can communicate with each other without 
+ requiring any additional configuration. By default, containers on a bridge network are 
+ isolated from the external network unless you explicitly expose ports.
+
+Host Network: When a container uses the host network mode, it shares the network 
+namespace with the Docker host, meaning it uses the host's network stack. This allows
+the container to directly access the network interfaces of the host system, essentially
+bypassing Docker's network isolation.
+
+Overlay Network: This is used in multi-host setups where you have multiple Docker hosts 
+running on different machines. It allows containers on different hosts to communicate with
+ each other as if they were on the same host. This is especially useful for orchestrators 
+ like Docker Swarm or Kubernetes.
+
+Macvlan Network: This allows you to assign a MAC address to a container, making it appear
+ as a physical device on your network. This can be useful when you want your container to
+ have its own IP address and be directly accessible from the external network.
+
+docker network:
+-->networking is about communication among process
+-->docker networking enables a user to link a docker container to as many networks as they require
+-->docker network is used to provide complete isolation for docker container
+advantages of docker networking:
+===============================
+1.conatiners share single operating system and maintains containers in isolated manner
+2.it helps in the fast delivery of software 
+3.it helps in application portability
+
+when docker is installed in a machine by default 3 docker networks will be configured
+     1. none
+	 2. host
+	 3.bridge
+note:one container we can attach to multiple networks
+-->when container is attached to multiple networks then those containers can comminicate 
+--->docker providing networking to containers using network drivers
+
+docker network drivers:
+=======================
+1.none
+2.host
+3.bridge
+4.overlay driver 
+5.macvlan driver
+ 
+ bridge:this is default drive created on the docker host machine
+ 
+ note:bride network drivers are very useful when application in stand alone container
+ 
+ we can see more details about this driver we can use following command
+
+docker network inspect bridge
+
+2.host drivers:
+--> it is  useful when application in stand alone container
+-->the container will not get any IP address when we enable host driver 
+-->in this cae we no need to map container port to host machine port
+ this is useful when we are running our containers with large no.of ports
+here no need port mapping
+3.none drivers:
+===============
+in trhis type of network the container will have no access to network
+
+ooverlay driver:
+===============
+-->we will use docker swarm to  orchestarate our docker containers 
+-->overlay driver will be used when we have docker swarm cluster 
+macvlan:
+========
+--->it will assign a MAC address to a container
+-->MAC address will make our device as physical device
+-->using this MAC address Docker engine routes the traffic to a particular routes
+
+docker network ls
+docker pull nginx
+running docker container with default network 
+docker run -itd --name c1 -p 80:80 nginx
+docker inspect nginx 
+#creating our own bridge network 
+docker network create --driver bridge mynetwork
+docker network ls
+note: if we don'yt specify driver then by defaultit will take
+bridge driver 
+
+run the docker container using custom network which we have created 
+
+docker run -itd --name c1 --network mynetwork -p 80:80 nginx
+docker network ls
+#to check the containers attached to my-network  
+ docker network inspect mynetwork
+ 
+i wnat to create two containers in my network,i want to check these two are communicate each other or not
+
+docker run -itd --name c1 --network mynetwork -p 8080:80 nginx
+
+docker run -itd --name c2 --network mynetwork -p 9090:80 nginx
+
+docker ps 
+
+#ip address of container we can get by using the following command
+
+docker inspect -f '{{range.Networksetting.Networks}}{{.IPAddress}}{{end}}' containerid	  
+	  
+now login to the one container withe help of follwing
+
+docker exec -it c1 /bin/bash
+
+apt-get update -y 
+apt install iputils-ping 
+ping ipaddress of c2  
+
+we can do the same procedure on c2 also
+
+running containers using host network:
+
+docker run --name c3 --network host -d nginx
+copy the index.html from ec2 instance to apache container we ca use the following command
+docker cp index.html c5:/var/www/html
+
+ COMMANDS:
+docker network create paytm
+docker network ls
+docker network inspect paytm
+docker network connect paytm cont1
+docker network connect paytm cont2
+docker exec cont1 sudo apt update -y
+docker exec cont1 sudo apt install iputils-ping -y
+docker exec cont1 ping ip-cont2
    
