@@ -1,3 +1,191 @@
+k8s installation:
+=================
+minikube installation:
+
+sudo apt update -y
+sudo apt upgrade -y
+sudo apt install curl wget apt-transport-https -y
+sudo curl -fsSL https://get.docker.com -o get-docker.sh
+sudo sh get-docker.sh
+sudo curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+sudo mv minikube-linux-amd64 /usr/local/bin/minikube
+sudo chmod +x /usr/local/bin/minikube
+sudo minikube version
+sudo curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo curl -LO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256"
+sudo echo "$(cat kubectl.sha256) kubectl" | sha256sum --check
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+sudo minikube start --driver=docker --force
+ 
+ pod: 
+ pod is the basic scheduling unit. 
+ POD: Group of containers
+ It is a group of one or more containers that are deployed together on the same host
+ pods are considered to be ephemeral(short living objeccts)
+ Keep in mind that while pods are the basic unit of scheduling, it's common to manage 
+ them using higher-level abstractions like Deployments or StatefulSets, which provide 
+ additional features such as automatic scaling, rolling updates, and more.
+ it is the smallest unit of K8s that can be deployable.
+ inside pod we have container 
+ inside container we have application.
+
+POD CAN BE CREATED ON 2 WAYS.
+
+1. IMPERTAIVE: commands.
+2. DECLARATIVE: Manifest file.
+ 
+ pods can be created two ways 
+ 1.imparative method
+ 2.declarative method
+ 
+ 
+1.imparative method:
+
+kubectl run pod1 --image=ramu478/devops
+kubectl get pods
+kubectl get po -o wide	
+kubectl descirbe pod pod1
+kubectl delete pod pod1
+
+declarative method:
+
+vim pod2.yml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pod2 
+spec:
+  containers:
+    - image: ramu478/devops
+      name: cont1
+	  
+kubectl apply -f pod2.yml
+
+Replicaset:
+a ReplicaSet is a controller that ensures a specified number of identical pods 
+are running at all times
+It is part of the Kubernetes API, and its purpose is to maintain the desired number
+of pod replicas in a system.  
+	  
+vim replicaset.yml
+
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: ramesh-replicaset
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pod1
+  template:
+    metadata:
+      labels:
+        app: pod1
+    spec:
+      containers:
+      - name: cont2
+        image: ramu478/aws
+
+kubectl apply -f replicaset.yml
+kubectl get rs/replicaset
+kubectl get rs -o wide
+kubectl describe rs example-replicaset
+kubectl delete rs example-replicaset
+kubectl get pods -l app=example
+
+deployment:
+we can update the application 
+
+vim deployment.yml
+ 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: pod2
+  name: pod2-rs
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pod2
+  template:
+    metadata:
+      labels:
+        app: pod2
+    spec:
+      containers:
+      - name: cont2
+        image: ramu478/java
+
+kubectl get deploy
+kubectl get deploy -o wide
+kubectl describe deploy name-of-deployment
+kubectl delete deploy name-of-deploy
+kubectl get pods -l app=swiggy
+kubectl scale deploy/name-of-deploy --replicas=10 (LIFO)
+kubectl edit deploy/name-of-deploy
+kubectl get pods --show-labels
+history:
+    vim minikube.sh
+    2  sh minikube.sh
+    3  minikube status
+    4  kubectl get nodes
+    5  kubectl get pods
+    6  kubectl run pod1 --image=ramu478/java
+    7  kubectl get pods
+    8  docker --version
+    9  kubectl get po
+   10  kubectl get po -o wide
+   11  kubectl describe pod1
+   12  kubectl describe pod pod1
+   13  kubectl delete pod pod1
+   14  kubectl get pods
+   15  kubectl run pod1 --image=rameshmekala123/database
+   16  kubectl get po
+   17  kubectl run pod2 --image=rameshmekala123/aws
+   18  kubectl get po
+   19  kubectl run pod2 --image=nginx
+   20  kubectl run pod3 --image=nginx
+   21  kubectl get po
+   22  kubectl delete pod pod1
+   23  kubectl delete pod pod2
+   24  vim pod1.yml
+   25  kubectl apply -f pod1.yml
+   26  kubectl get pods
+   27  kubectl delete pod pod1
+   28  kubectl delete pod pod3
+   29  vim pod1.yml
+   30  kubectl apply -f pod1.yml
+   31  kubectl get po
+   32  kubectl get po -o wide
+   33  kubectl describe pod pod1
+   34  kubectl delete pod pod1
+   35  vim replicaset.yml
+   36  kubectl apply -f replicaset.yml
+   37  kubectl get rs
+   38  kubectl get rs -o wide
+   39  kubectl describe rs ramesh-replicaset
+   40  kubectl get po
+   41  vim deployment.yml
+   42  kubectl apply -f deployment.yml
+   43  kubectl get deploy
+   44  kubectl get deploy -o wide
+   45  kubectl describe deploy pod2-rs
+   46  kubectl get po
+   47  kubectl delete rs ramesh-replicaset-8qzs5
+   48  kubectl delete pod ramesh-replicaset-8qzs5
+   49  kubectl get po
+   50  kubectl get rs
+   51  kubectl delete rs ramesh-replicaset
+   52  kubectl get po
+   53  kubectl get deploy
+   54  kubectl delete deploy pod2-rs
+   55  kubectl get po
+
+
 to start the minikube we have to use the following command
 
 minikube start --driver=docker --force
+========================================================================================================================
