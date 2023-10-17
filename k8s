@@ -522,4 +522,103 @@ history:
   119  export KOPS_STATE_STORE=s3://ramu123321.k8s
   120  kops delete cluster --name mohan.k8s.local --yes
 
+configmaps and secrets:
+----------------------
+--> a config map is an API object used to store configuration data that can be 
+   consumed by pods or other resources in the cluster
+ -->it provides a way to decouple configuration settings from containerized
+   applications,making it easier to manage and update configuration data 
+   without modifying the application code or container images
+-->configmaps store key-value pairs or provide the mount configuration 
+   files as data 
+-->this can include environment variables,commandline  arguments,
+   configuration files or any other type of configuration data required by 
+   your application. 
+secrets:
+--------
+In k8s, a secret is an API object used to store sensitive information,such as passwords,tokens or SSH keys 
+-->secrets provide a way to securely store and manage sensitive data with in a cluster
+--->secrrets can be used by applications and pods to access sensitive information without exposing it in plain text
+-->they are typically used to store data that needs to be passed containers securely,such as database credentials,API keys etc 
+-->kubernetes secrets stored in the cluster's etcd datastore,encrypted at rest. they can be accessed by pods or other kubernetes objects securely
+
+vim configmap.yml
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: devopscm
+data:
+  tomcat_url: "https://172.26.150.100:8080"
+  db_url: "https://172.35.14.105:5432"
+
+vim pod.yml 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: devops
+spec:
+  containers:
+    - name: devops-cont1
+      image: nginx
+      envFrom:
+        - configMapRef:
+            name: devopscm
+kubectl apply -f configmap.yml
+kubectl apply -f pod.yml
+kubectl describe cm swiggycm
+kubectl describe pod swiggy
+
+file formate:
+
+vim varsfile
+MYSQL_ROOT_PASSWORD=ramu
+MYSQL_USER=admin
+
+kubectl create cm dbvars --from-env-file=varsfile
+kubectl describe cm dbvars
+kubectl get cm
+kubectl get pods
+
+SECRETS:
+
+To store sensitive data in an unencrypted format like passwords, ssh-keys etc ---
+it uses base64 encoded format
+Designed to prevent  exposure or unauthorized access to sensitive information within the cluster.
+Both secrets and Config maps are used outside of deployment
+config maps cannot encode but secrets will encode the data
+password=ram (now we can encode and ecode the value)
+kubectl get secret
+kubectl create secret generic password --from-literal=ROOT_PASSWORD=ram123
+kubectl get secrets
+
+history:
+mkdir kubernetes
+  165  cd kubernetes/
+  166  vim configmaps.yml
+  167  vim pod.yml
+  168  kubectl apply -f configmaps.yml
+  169  kubectl apply -f pod.yml
+  170  kubectl get pods
+  171  kubectl get po -o wide
+  172  kubectl describe cm devopscm
+  173  cat pod.yml
+  174  vim varsfile
+  175  kubectl create cm dbvars --from-env-file=varsfile
+  176  kubectl describe cm dbvars
+  177  kubectl get deploy
+  178  kubectl create deploy swiggydb --image=mariadb
+  179  kubectl get deploy
+  180  kubectl get pod
+  181  kubectl get deploy
+  182  kubectl create secret generic password --from-literal=ROOT_PASSWORD=ram123
+  183  kubectl get secrets
+  184  kubectl describe secret
+  185  kops delete cluster --name mohan.k8s.local --yes
+  186  cd ..
+  187  cat kops.sh
+  188  export KOPS_STATE_STORE=s3://ramu123321.k8s
+  189  kops delete cluster --name mohan.k8s.local --yes
+
 
