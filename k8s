@@ -521,7 +521,7 @@ history:
   118  cat kops.sh
   119  export KOPS_STATE_STORE=s3://ramu123321.k8s
   120  kops delete cluster --name mohan.k8s.local --yes
-
+========================================================================================================================
 configmaps and secrets:
 ----------------------
 --> a config map is an API object used to store configuration data that can be 
