@@ -620,5 +620,61 @@ mkdir kubernetes
   187  cat kops.sh
   188  export KOPS_STATE_STORE=s3://ramu123321.k8s
   189  kops delete cluster --name mohan.k8s.local --yes
+======================================================================================================================
+installation of k8s using kubeadm
+---------------------------------
+prerequasites:
+one master node(t2.medium),two worker nodes (t2.micro)
+enable all traffic for all machines
 
+installation:
+-------------
+on all nodes preform the following shell script
+vim kubeadm.sh
 
+sudo apt-get update 
+sudo apt-get install docker.io -y
+curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add
+sudo apt-get install curl -y
+sudo apt-add-repository "deb http://apt.kubernetes.io/ kubernetes-xenial main"
+sudo apt-get install kubeadm kubelet kubectl -y
+sudo apt-mark hold kubeadm kubelet kubectl
+kubeadm version
+
+on master only 
+---------------
+sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+
+the following command is network plggin for provide the network for cluster become ready state
+
+kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+
+history:
+
+       apt install docker.io -y
+    2  service docker status
+    3  vim kubeadm.sh
+    4  sh kubeadm.sh
+    5  sudo kubeadm init --pod-network-cidr=10.244.0.0/16
+    6  apt update -y
+    7  hostname
+    8  hostname master
+    9  bash
+   10  kubectl get no
+   11  kubectl apply -f https://github.com/flannel-io/flannel/releases/latest/download/kube-flannel.yml
+   12  kubectl get no
+   13  kubectl run pod1 --image ramu478/aws
+   14  kubectl get po
+   15  kubectl get po -o wide
+   16  kubectl describe pod1
+   17  kubectl describe pod pod1
+   18  kubectl get ns
+   19  kubectl get rs
+   20  kubectl get deploy
+   21  kubectl get svc
+   22  vim loadbalancer.yml
+   23  kubectl apply -f loadbalancer.yml
+   24  kubectl get svc
+   25  kubectl get po
+   26  kubectl get po -o wide
+   27  kubectl get svc
