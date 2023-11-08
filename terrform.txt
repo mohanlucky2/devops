@@ -73,5 +73,49 @@ type = string
 default = "ami-0dbc3d7bc646e8516"
 }
 
+history:
+ aws configure
+    2  sudo yum install -y yum-utils shadow-utils
+    3  sudo yum-config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+    4  sudo yum -y install terraform
+    5  terraform --version
+    6  vim main.tf
+    7  terraform fmt
+    8  cat main.tf 
+    9  terraform init
+   10  terraform plan
+   11  terraform dey --auto-approve
+   12  terraform state list
+   13  ls
+   14  cat terraform.tfstate 
+   15  terraform destroy
+   16  mkdir terraform
+   17  cd terraform/
+   18  cd ..
+   19  cat main.tf 
+   20  cd terraform/
+   21  ls
+   22  vim main.tf
+   23  terraform plan
+   24   terraform init
+   25  terraform plan
+   26  cat main.tf 
+   27  terraform fmt
+   28  cat main.tf 
+   29  terraform apply --auto-approve
+   30  terraform destroy --auto-approve
+   31  vim main.tf
+   32  terraform plan
+   33  terraform apply --auto-approve
+   34  terraform destroy --auto-approve
+   35  cat main.tf 
+   36  mkdir dir
+   37  cd dir/
+   38  vim main.tf
+   39  vim variables.tf
+   40  terraform init
+   41  terraform apply --auto-approve
+   42  terraform destroy --auto-approve
+
 
  
