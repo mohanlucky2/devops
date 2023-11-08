@@ -1,0 +1,77 @@
+terraform installation
+------------------------
+apt update -y
+apt install awscli -y
+wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+sudo apt update && sudo apt install terraform
+terraform -v
+
+aws instance creation:
+-----------------------
+example-1
+---------
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-03eb6185d756497f8"
+instance_type = "t2.micro"
+}
+
+Commands:
+terraform init 
+terraform plan   
+terraform apply 
+terraform destroy 
+
+terraform state list
+example-2
+----------
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_instance" "one" {
+count = 5
+ami = "ami-03eb6185d756497f8"
+instance_type = "t2.micro"
+}
+
+target: used to delete a specific resource
+Single target: terraform destroy -target=aws_instance.one[0]
+Multi target: terraform destroy -target=aws_instance.one[1] -target=aws_instance.one[2]
+
+variables:
+
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_instance" "one" {
+count = var.instance_count
+ami = var.ami_id
+instance_type = var.instance_type
+}
+
+variable "instance_type" {
+description = "*"
+type = string
+default = "t2.large"
+}
+
+variable "instance_count" {
+description = "*"
+type = number
+default = 5
+}
+
+variable "ami_id" {
+description = "*"
+type = string
+default = "ami-0dbc3d7bc646e8516"
+}
+
+
+ 
