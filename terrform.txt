@@ -113,6 +113,202 @@ history:
    40  terraform init
    41  terraform apply --auto-approve
    42  terraform destroy --auto-approve
+vim vpc.pem
 
+provider "aws"{
+region="us-east-1"
+}
+resource "aws_vpc""one"{
+cidr_block="20.0.0.0/16"
+tags={
+Name="myvpc"
+}
+}
+resource "aws_subnet""two"{
+vpc_id=aws_vpc.one.id
+cidr_block="20.0.0.0/24"
+tags={
+Name="mysubnet"
+}
+}
 
+tfvars:
+-------
+Using tfvars files allows you to keep sensitive or environment-specific information separate from your main Terraform configurations. It also makes it easier to manage and reuse configurations across different environments or teams.
+vim variable.tf
+
+variable "region" {
+description = "The AWS region to deploy resources in."
+type        = string
+}
+
+variable "instance_type" {
+description = "The EC2 instance type."
+type        = string
+}
+
+vim main.tf
+
+provider "aws" {
+region = var.region
+}
+resource "aws_instance" "example" {
+ami           = "ami-0c94855ba95c71c99"
+instance_type = var.instance_type
+}
+
+test.tfvars:
+region = "us-east-1"
+instance_type = "t2.micro"
+
+TERRAFORM CLI:
+we can pass inputs for terraform from cli.
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-0b41f7055516b991a"
+instance_type = var.instance_type
+tags = {
+Name = "linux"
+}
+}
+
+variable "instance_type" {
+}
+
+terraform apply --auto-approve -var="instance_type=t2.medium"
+terraform destroy --auto-approve -var="instance_type=t2.medium"
+
+TERRAFORM OUTPUTS: used to print the resource properties.
+ex: public-ip, dns, instance type
+
+provider "aws" {
+region = "ap-south-1"
+}
+
+resource "aws_instance" "one" {
+ami = "ami-0b41f7055516b991a"
+instance_type = "t2.medium"
+tags = {
+Name = "raham-server"
+}
+}
+
+output "raham" {
+value = [aws_instance.one.public_ip, aws_instance.one.private_ip, aws_instance.one.public_dns, aws_instance.one.private_dns]
+}
+
+44  terraform --version
+   45  ls
+   46  cd terraform/
+   47  ls
+   48  cd dir
+   49  ls
+   50  cd ..
+   51  mkdir dir1
+   52  cd dir1/
+   53  vim vpc.tf
+   54  terraform  init
+   55  terraform plan
+   56  terraform apply --auto-approve
+   57  terraform destroyy --auto-approve
+   58  terraform destroy --auto-approve
+   59  cat vpc.tf 
+   60  provider "aws" {
+   61    region = "us-east-1" # Change this to your desired AWS region
+   62  }
+   63  resource "aws_vpc" "my_vpc" {
+   64    cidr_block = "10.0.0.0/16" # Define your desired CIDR block for the VPC
+   65    tags = {
+   66      Name = "my_vpc"
+   67    }
+   68  }
+   69  resource "aws_subnet" "my_subnet" {
+   70    vpc_id     = aws_vpc.my_vpc.id
+   71    cidr_block = "10.0.0.0/24" # Define your desired CIDR block for the subnet
+   72    availability_zone = "us-east-1a" # Choose your desired availability zone
+   73    tags = {
+   74      Name = "my_subnet"
+   75    }
+   76  }cat vpc.tf 
+   77  ls
+   78  cat vpc.tf 
+   79  vim main.tf
+   80  vim variables.tf
+   81  vim test.tfvars
+   82  terraform init
+   83  ls
+   84  rm -rf vpc.tf 
+   85  terraform init
+   86  terraform plan
+   87  terraform apply --auto-approve -var-file=test.tfvars
+   88  terraform destroy --auto-approve -var-file=test.tfvars
+   89  ls
+   90  rm -rf *
+   91  ls
+   92  mkdir terraform
+   93  cd terraform
+   94  vim main.tf
+   95  vim variables.tf
+   96  vim test.tfvars
+   97  vim main.tf
+   98  cat main.tf 
+   99  cat variables.tf 
+  100  cat test.tfvars 
+  101  terraform init
+  102  vim main.tf 
+  103  terraform init
+  104  terraform plan
+  105  terraform plan -var-file="test.tfvars"
+  106  vim dev.tfvars
+  107  terraform apply -var-file="dev.tfvars"
+  108  terraform apply --auto-approve -var-file="test.tfvars"
+  109  terraform destroy --auto-approve -var-file="test.tfvars"
+  110  vim main.tf 
+  111  vim variables.tf 
+  112  vim dev.tfvars 
+  113  terraform init
+  114  vim variables.tf 
+  115  cat -n variables.tf 
+  116  terraform init
+  117  terraform validate
+  118  terraform plan -var-file="dev.tfvars"
+  119  terraform apply -var-file="dev.tfvars"
+  120  terraform apply --auto-approve -var-file="dev.tfvars"
+  121  terraform destroy --auto-approve -var-file="dev.tfvars"
+  122  ls
+  123  cd ..
+  124  mkdir terra
+  125  cd terra
+  126  vim main.tf
+  127  cat main.tf 
+  128  terraform init
+  129  cat main.tf 
+  130  ls
+  131  terraform apply --auto-approve -var="instance_type"="t2.micro"
+  132  vim main.tf
+  133  terraform apply --auto-approve -var="instance_type"="t2.micro"
+  134  terraform destroy --auto-approve -var="instance_type"="t2.micro"
+  135  ls
+  136  rm -rf terraform.tfstate terraform.tfstate.backup 
+  137  vim main.tf 
+  138  terraform init
+  139  terraform apply --auto-approve 
+  140  terraform destroy --auto-approve 
+  141  vim vpc.tf
+  142  ls
+  143  terraform init
+  144  rm -f main.tf 
+  145  terraform init
+  146  terraform plan
+  147  vim vpc.tf 
+  148  terraform plan
+  149  vim vpc.tf 
+  150  terraform plan
+  151  terraform apply --auto-approve
+  152  terraform state list
+  153  terraform destroy --auto-approve
  
