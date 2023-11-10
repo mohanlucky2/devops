@@ -113,6 +113,7 @@ history:
    40  terraform init
    41  terraform apply --auto-approve
    42  terraform destroy --auto-approve
+-----------------------------------------------------------------------------------------------------------------------
 vim vpc.pem
 
 provider "aws"{
@@ -161,6 +162,10 @@ test.tfvars:
 region = "us-east-1"
 instance_type = "t2.micro"
 
+to exicute the tf vars use the following command:
+
+terrraform apply --auto-approve -var-file="test.tfvars"
+
 TERRAFORM CLI:
 we can pass inputs for terraform from cli.
 
@@ -193,11 +198,11 @@ resource "aws_instance" "one" {
 ami = "ami-0b41f7055516b991a"
 instance_type = "t2.medium"
 tags = {
-Name = "raham-server"
+Name = "server"
 }
 }
 
-output "raham" {
+output "ram" {
 value = [aws_instance.one.public_ip, aws_instance.one.private_ip, aws_instance.one.public_dns, aws_instance.one.private_dns]
 }
 
@@ -311,4 +316,5 @@ value = [aws_instance.one.public_ip, aws_instance.one.private_ip, aws_instance.o
   151  terraform apply --auto-approve
   152  terraform state list
   153  terraform destroy --auto-approve
+---------------------------------------------------------------------------------------------------
  
