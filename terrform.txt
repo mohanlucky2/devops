@@ -318,3 +318,183 @@ value = [aws_instance.one.public_ip, aws_instance.one.private_ip, aws_instance.o
   153  terraform destroy --auto-approve
 ---------------------------------------------------------------------------------------------------
  
+provider "aws" {
+region = "us-east-1"
+}
+
+resource "aws_s3_bucket" "one" {
+bucket = "rac ket321223"
+}
+
+resource "aws_ebs_volume" "two" {
+size = 20
+availability_zone = "us-east-1b"
+tags = {
+Name = "my-ebs"
+}
+}
+
+resource "aws_iam_user" "three" {
+name = "akash"
+}
+
+resource "aws_instance" "four" {
+ami = "ami-0e8a34246278c21e4"
+instance_type = "t2.micro"
+tags = {
+Name = "server-1"
+}
+} 
+
+Terraform taint: used to recreate specific objects 
+in real time some resource we need to recrete if it will not work properly 
+then we can use taint concetp
+
+terraform taint aws_instance.four
+terraform apply --auto-approve 
+
+TERRAFORM LOCALS:
+its a block used to define the values.
+we can define the vaule once and used it for multiple times.
+provider "aws" {
+region = " us-east-1"
+}
+
+locals {
+env = "test"
+}
+
+resource "aws_vpc" "one" {
+cidr_block = "10.0.0.0/16"
+tags = {
+Name = "${local.env}-vpc"
+}
+}
+
+resource "aws_subnet" "two" {
+cidr_block = "10.0.0.0/16"
+availability_zone = "ap-south-1a"
+vpc_id = aws_vpc.one.id
+tags = {
+Name = "${local.env}-subnet"
+}
+}
+
+resource "aws_instance" "three" {
+subnet_id = aws_subnet.two.id
+ami = "ami-0e8a34246278c21e4"
+instance_type = "t2.micro"
+tags = {
+Name = "${local.env}-server"
+}
+} 
+
+TERRAFORM WORKSPACE:
+WORKSPACE: Where we write the code and execute operations.
+it is used to isolate the env.
+in real time all the works we do on workspaces only.
+if we perform an operation on one workspace it wont affect another workspace.
+
+
+NOTE:
+1. we can't delete our current workspace.
+2. we can't delete our workspace without deleting resources.
+3. we cant't delete default workspace.
+
+COMMANDS:
+
+terraform workspace list	: to list workspaces
+terraform workspace new dev	: to create a new workspace	
+terraform workspace show	: to show current workspace
+terraform workspace select prod	: to switch the workspaces
+terraform workspace delete prod	: to delete the workspaces
+
+
+provider "aws" {
+region = "us-east-1"
+}
+
+locals {
+env = "${terraform.workspace}"
+}
+
+resource "aws_vpc" "one" {
+cidr_block = "10.0.0.0/16"
+tags = {
+Name = "${local.env}-vpc"
+}
+}
+
+resource "aws_subnet" "two" {
+cidr_block = "10.0.0.0/16"
+availability_zone = "ap-south-1a"
+vpc_id = aws_vpc.one.id
+tags = {
+Name = "${local.env}-subnet"
+}
+}
+
+resource "aws_instance" "three" {
+subnet_id = aws_subnet.two.id
+ami = "ami-0e8a34246278c21e4"
+instance_type = "t2.micro"
+tags = {
+Name = "${local.env}-server"
+}
+}
+vim main.tf
+  164  terraform init
+  165  terraform plan
+  166  cat main.tf 
+  167  vim main.tf 
+  168  terraform init
+  169  terraform plan
+  170  cat main.tf 
+  171  terraform workspace list
+  172  terraform workspace new dev
+  173  terraform workspce select dev
+  174  terraform workspace select dev
+  175  terraform workspace show
+  176  ls
+  177  vim main.tf 
+  178  mkdir terraform-scripts
+  179  cd terraform-scripts/
+  180  ls
+  181  vim main.tf
+  182  terraform fmt
+  183  cat main.tf 
+  184  terraform init
+  185  cat main.tf 
+  186  terraform plan
+  187  terraform apply --auto-approve
+  188  terraform  state list
+  189  terraform taint aws_instance.four
+  190  terraform apply --auto-approve
+  191  terraform destroy --auto-approve
+  192  ls
+  193  cat main.tf 
+  194  vim main.tf 
+  195  terraform init
+  196  terraform plan
+  197  terraform apply --auto-approve
+  198  vim main.tf 
+  199  ls
+  200  cd terraform-scripts/
+  201  ls
+  202  vim main.tf 
+  203  terraform apply --auto-approve
+  204  terraform state list
+  205  terraform destroy --auto-approve
+  206  terrform workspace list
+  207  terraform workspace list
+  208  terraform workspace new dev
+  209  terraform workspace list
+  210  ls
+  211  vim main.tf 
+  212  terraform init
+  213  terraform plan
+  214  vim main.tf 
+  215  terraform plan
+  216  terraform apply --auto-approve
+  217  terraform destroy --auto-approve
+  218  terraform workspace delete dev
