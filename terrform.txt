@@ -498,3 +498,4 @@ vim main.tf
   216  terraform apply --auto-approve
   217  terraform destroy --auto-approve
   218  terraform workspace delete dev
+---------------------------------------------------------------------------------------------------------------------
