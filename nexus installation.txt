@@ -81,3 +81,39 @@ sudo systemctl start nexus
 
 The above command will start the nexus service on port 8081. To access the nexus dashboard, visit http://:8081. You will be able to see 
 the nexus homepage as shown below.
+
+history:
+------- 1  sudo yum update -y
+    2  sudo yum install wget -y
+    3  sudo yum install java-1.8.0-openjdk.x86_64 -y
+    4  sudo mkdir /app && cd /app
+    5  sudo wget -O nexus.tar.gz https://download.sonatype.com/nexus/3/latest-unix.tar.gz
+    6  sudo tar -xvf nexus.tar.gz
+    7  sudo mv nexus-3* nexus
+    8  sudo adduser nexus
+    9  sudo chown -R nexus:nexus /app/nexus
+   10  sudo chown -R nexus:nexus /app/sonatype-work
+   11  sudo vi  /app/nexus/bin/nexus.rc
+   12   sudo vi /app/nexus/bin/nexus.vmoptions
+   13  sudo vi /etc/systemd/system/nexus.service
+   14  sudo chkconfig nexus on
+   15  service nexus start
+   16  service nexus status
+   17  cat /app/sonatype-work/nexus3/admin.password
+   18  sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+   19    sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+   20  amazon-linux-extras install java-openjdk11 -y
+   21  yum install jenkins -y
+   22  service jenkins start
+   23  update-alternatives --config java
+   24  service jenkins start
+   25  cat /var/lib/jenkins/secrets/initialAdminPassword
+   26  yum install maven -y
+   27  mvn --version
+   28  file $(which java)
+   29  file /etc/alternatives/java
+   30  git --version
+   31  yum install git -y
+   32  java -version
+   33  update-alternatives --config java
+   34  java -version
