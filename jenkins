@@ -221,10 +221,10 @@ install the tomcat on slve server
 
 tomcat setup:
 --------------
-wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.80/bin/apache-tomcat-9.0.80.tar.gz
-tar -xzf apache-tomcat-9.0.80.tar.gz
-cd apache-tomcat-9.0.80
-vi apache-tomcat-9.0.80/conf/tomcatusers.xml
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.83/bin/apache-tomcat-9.0.83.tar.gz
+tar -xzf apache-tomcat-9.0.83.tar.gz
+cd apache-tomcat-9.0.83
+vi apache-tomcat-9.0.83/conf/tomcatusers.xml
 
  <role rolename="manager-gui"/>
   <role rolename="manager-script"/>
@@ -232,7 +232,7 @@ vi apache-tomcat-9.0.80/conf/tomcatusers.xml
 
 add the user and password
 
-vi apache-tomcat-9.0.80/webapps/manager/META-INF/context.xml
+vi apache-tomcat-9.0.83/webapps/manager/META-INF/context.xml
 
 delete 21 and 22 lines
 
